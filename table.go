@@ -1,6 +1,7 @@
 package clitable
 
 import (
+	"strings"
 	"fmt"
 )
 
@@ -63,7 +64,7 @@ func (t *Table) Print() {
 func (t *Table) getHead() string {
 	s := "|"
 	for _, name := range t.Fields {
-		s += t.fieldString(name, name) + "|"
+		s += t.fieldString(name, strings.Title(name)) + "|"
 	}
 	return s
 }
