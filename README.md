@@ -1,5 +1,4 @@
-Table in Console for Golang
----------------------------
+# Table in Console for Golang
 
 Example table:
 
@@ -13,4 +12,28 @@ Example table:
 |----------------------------------------------------------------------------------------|
 | Heroku            | heroku.com           | App Engine       | 5251918e56357d17ec000005 |
 |----------------------------------------------------------------------------------------|
+```
+
+## Horizontal table
+
+Example table:
+
+```
+|---------------------------------|
+| Name | MongoLab                 |
+|---------------------------------|
+| Host | mongolab.com             |
+|---------------------------------|
+| Type | MongoDB Provider         |
+|---------------------------------|
+| _id  | 52518c5d56357d17ec000002 |
+|---------------------------------|
+```
+
+```Go
+table.PrintHorizontal(map[string]string{
+	"Name": "MongoLab",
+	"Host": "mongolab.com",
+	// ...
+})
 ```
