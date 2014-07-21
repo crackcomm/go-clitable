@@ -1,6 +1,6 @@
 package clitable
 
-// Prints table with only one row
+// PrintRow - Prints table with only one row.
 func PrintRow(fields []string, row map[string]interface{}) {
 	table := New(fields)
 	// add row
@@ -9,6 +9,7 @@ func PrintRow(fields []string, row map[string]interface{}) {
 	table.Print()
 }
 
+// PrintTable - Prints table.
 func PrintTable(fields []string, rows []map[string]interface{}) {
 	// Construct a table
 	table := New(fields)
