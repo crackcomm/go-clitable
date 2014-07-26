@@ -1,5 +1,7 @@
 package clitable
 
+import "strings"
+
 var mapFields = []string{"Key", "Value"}
 
 // PrintHorizontal - Prints horizontal table from a map.
@@ -22,7 +24,7 @@ func mapToRows(m map[string]interface{}) (rows []map[string]interface{}) {
 	rows = []map[string]interface{}{}
 	for key, value := range m {
 		row := map[string]interface{}{}
-		row["Key"] = key
+		row["Key"] = strings.Title(key)
 		row["Value"] = value
 		rows = append(rows, row)
 	}
