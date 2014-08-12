@@ -1,3 +1,4 @@
+// Package clitable implements methods for pretty command line table output.
 package clitable
 
 import (
