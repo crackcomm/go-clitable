@@ -92,7 +92,7 @@ func (t *Table) rowString(row map[string]string) string {
 // fieldString - Creates field value string.
 func (t *Table) fieldString(name, value string) string {
 	value = fmt.Sprintf(" %s ", value)
-	spacesLeft := t.fieldSizes[name] - len(value)
+	spacesLeft := t.fieldSizes[name] - utf8.RuneCountInString(value)
 	if spacesLeft > 0 {
 		for i := 0; i < spacesLeft; i++ {
 			value += " "
