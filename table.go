@@ -4,6 +4,7 @@ package clitable
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Table - Table structure.
@@ -37,10 +38,10 @@ func (t *Table) AddRow(row map[string]interface{}) {
 			val = fmt.Sprintf("%v", v)
 		}
 
-		valLen := len(val)
+		valLen := utf8.RuneCountInString(val)
 		// align to field name length
-		if valLen < len(k) {
-			valLen = len(k)
+		if klen := utf8.RuneCountInString(k); valLen < klen {
+			valLen = klen
 		}
 		valLen += 2 // + 2 spaces
 		if t.fieldSizes[k] < valLen {
