@@ -37,3 +37,28 @@ table.PrintHorizontal(map[string]string{
 	// ...
 })
 ```
+
+## Markdown table
+
+```
+table := New(...)
+table.Markdown = true
+table.Print()
+```
+
+
+Example table:
+
+```
+| Name | MongoLab                 |
+| ---- | ------------------------ |
+| Host | mongolab.com             |
+| Type | MongoDB Provider         |
+| _id  | 52518c5d56357d17ec000002 |
+```
+
+| Name | MongoLab                 |
+| ---- | ------------------------ |
+| Host | mongolab.com             |
+| Type | MongoDB Provider         |
+| _id  | 52518c5d56357d17ec000002 |
