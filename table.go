@@ -3,8 +3,8 @@ package clitable
 
 import (
 	"fmt"
+	"github.com/mattn/go-runewidth"
 	"strings"
-	"unicode/utf8"
 )
 
 // Table - Table structure.
@@ -39,9 +39,9 @@ func (t *Table) AddRow(row map[string]interface{}) {
 			val = fmt.Sprintf("%v", v)
 		}
 
-		valLen := utf8.RuneCountInString(val)
+		valLen := runewidth.StringWidth(val)
 		// align to field name length
-		if klen := utf8.RuneCountInString(k); valLen < klen {
+		if klen := runewidth.StringWidth(k); valLen < klen {
 			valLen = klen
 		}
 		valLen += 2 // + 2 spaces
@@ -104,7 +104,7 @@ func (t *Table) rowString(row map[string]string) string {
 // fieldString - Creates field value string.
 func (t *Table) fieldString(name, value string) string {
 	value = fmt.Sprintf(" %s ", value)
-	spacesLeft := t.fieldSizes[name] - utf8.RuneCountInString(value)
+	spacesLeft := t.fieldSizes[name] - runewidth.StringWidth(value)
 	if spacesLeft > 0 {
 		for i := 0; i < spacesLeft; i++ {
 			value += " "
