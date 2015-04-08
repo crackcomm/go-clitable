@@ -13,6 +13,7 @@ type Table struct {
 	Rows       []map[string]string
 	HideHead   bool // when true doesn't print header
 	Markdown   bool
+	Footer     map[string]string
 	fieldSizes map[string]int
 }
 
@@ -22,6 +23,25 @@ func New(fields []string) *Table {
 		Fields:     fields,
 		Rows:       make([]map[string]string, 0),
 		fieldSizes: make(map[string]int),
+	}
+}
+
+func (t *Table) calculateSizes(row map[string]string) {
+	for _, k := range t.Fields {
+		v, ok := row[k]
+		if !ok {
+			continue
+		}
+
+		vlen := runewidth.StringWidth(v)
+		// align to field name length
+		if klen := runewidth.StringWidth(k); vlen < klen {
+			vlen = klen
+		}
+		vlen += 2 // + 2 spaces
+		if t.fieldSizes[k] < vlen {
+			t.fieldSizes[k] = vlen
+		}
 	}
 }
 
@@ -39,17 +59,11 @@ func (t *Table) AddRow(row map[string]interface{}) {
 			val = fmt.Sprintf("%v", v)
 		}
 
-		valLen := runewidth.StringWidth(val)
-		// align to field name length
-		if klen := runewidth.StringWidth(k); valLen < klen {
-			valLen = klen
-		}
-		valLen += 2 // + 2 spaces
-		if t.fieldSizes[k] < valLen {
-			t.fieldSizes[k] = valLen
-		}
 		newRow[k] = val
 	}
+
+	t.calculateSizes(newRow)
+
 	if len(newRow) > 0 {
 		t.Rows = append(t.Rows, newRow)
 	}
@@ -57,9 +71,11 @@ func (t *Table) AddRow(row map[string]interface{}) {
 
 // Print - Prints table.
 func (t *Table) Print() {
-	if len(t.Rows) == 0 {
+	if len(t.Rows) == 0 && t.Footer == nil {
 		return
 	}
+
+	t.calculateSizes(t.Footer)
 
 	if !t.Markdown {
 		t.printDash()
@@ -79,6 +95,15 @@ func (t *Table) Print() {
 		if !t.Markdown {
 			t.printDash()
 		}
+	}
+
+	if t.Footer != nil {
+		if t.Markdown {
+			t.printMarkdownDash()
+		} else {
+			t.printDash()
+		}
+		fmt.Println(t.rowString(t.Footer))
 	}
 }
 
@@ -127,7 +152,7 @@ func (t *Table) printDash() {
 func (t *Table) printMarkdownDash() {
 	r := make(map[string]string)
 	for _, name := range t.Fields {
-		r[name] = strings.Repeat("-", t.fieldSizes[name] - 2)
+		r[name] = strings.Repeat("-", t.fieldSizes[name]-2)
 	}
 	fmt.Println(t.rowString(r))
 }
