@@ -25,7 +25,7 @@ func New(fields []string) *Table {
 	}
 }
 
-// AddRow - Adds table row.
+// AddRow - Adds row to the table.
 func (t *Table) AddRow(row map[string]interface{}) {
 	newRow := make(map[string]string)
 	for _, k := range t.Fields {
@@ -127,16 +127,15 @@ func (t *Table) printDash() {
 func (t *Table) printMarkdownDash() {
 	r := make(map[string]string)
 	for _, name := range t.Fields {
-		r[name] = strings.Repeat("-", t.fieldSizes[name] - 2)
+		r[name] = strings.Repeat("-", t.fieldSizes[name]-2)
 	}
 	fmt.Println(t.rowString(r))
 }
 
 // lineLength - Counts size of table line length (with spaces etc.).
 func (t *Table) lineLength() (sum int) {
-	sum = 1
 	for _, l := range t.fieldSizes {
 		sum += l + 1
 	}
-	return sum
+	return sum + 1
 }

@@ -1,6 +1,18 @@
-# Table in Console for Golang
+# go-clitable
 
-Example table:
+[![GoDoc](https://godoc.org/github.com/crackcomm/go-clitable?status.svg)](https://godoc.org/github.com/crackcomm/go-clitable)
+
+ASCII and Markdown tables in console for golang.
+
+## Usage
+
+### Print table
+
+```Go
+table := New([]string{"Name", "Host", "..."})
+table.AddRow(map[string]interface{"Name": "..."})
+table.Print()
+```
 
 ```
 |----------------------------------------------------------------------------------------|
@@ -14,9 +26,14 @@ Example table:
 |----------------------------------------------------------------------------------------|
 ```
 
-## Horizontal table
+### Horizontal table
 
-Example table:
+```Go
+table.PrintHorizontal(map[string]interface{}{
+	"Name": "MongoLab",
+	"Host": "mongolab.com",
+})
+```
 
 ```
 |---------------------------------|
@@ -30,25 +47,15 @@ Example table:
 |---------------------------------|
 ```
 
+### Markdown table
+
 ```Go
-table.PrintHorizontal(map[string]string{
-	"Name": "MongoLab",
-	"Host": "mongolab.com",
-	// ...
-})
-```
-
-## Markdown table
-
-```
-table := New(...)
+table := New([]string{"Name", "Host", "..."})
+table.AddRow(map[string]interface{"Name": "..."})
 table.Markdown = true
 table.Print()
 ```
 
-
-Example table:
-
 ```
 | Name              | Host                 | Type             | _id                      |
 | ----------------- | -------------------- | ---------------- | ------------------------ |
@@ -62,3 +69,8 @@ Example table:
 | MongoLab          | mongolab.com         | MongoDB Provider | 52518c5d56357d17ec000002 |
 | Google App Engine | appengine.google.com | App Engine       | 52518ff356357d17ec000004 |
 | Heroku            | heroku.com           | App Engine       | 5251918e56357d17ec000005 |
+
+
+## License
+
+Unlicensed. For more information, please refer to http://unlicense.org.
