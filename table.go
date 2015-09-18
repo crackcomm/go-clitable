@@ -25,6 +25,33 @@ func New(fields []string) *Table {
 	}
 }
 
+// PrintTable - Prints table.
+func PrintTable(fields []string, rows []map[string]interface{}) {
+	table := New(fields)
+	for _, r := range rows {
+		table.AddRow(r)
+	}
+	table.Print()
+}
+
+// PrintHorizontal - Prints horizontal table from a map.
+func PrintHorizontal(m map[string]interface{}) {
+	table := New([]string{"Key", "Value"})
+	rows := mapToRows(m)
+	for _, row := range rows {
+		table.AddRow(row)
+	}
+	table.HideHead = true
+	table.Print()
+}
+
+// PrintRow - Prints table with only one row.
+func PrintRow(fields []string, row map[string]interface{}) {
+	table := New(fields)
+	table.AddRow(row)
+	table.Print()
+}
+
 // AddRow - Adds row to the table.
 func (t *Table) AddRow(row map[string]interface{}) {
 	newRow := make(map[string]string)
@@ -138,4 +165,15 @@ func (t *Table) lineLength() (sum int) {
 		sum += l + 1
 	}
 	return sum + 1
+}
+
+func mapToRows(m map[string]interface{}) (rows []map[string]interface{}) {
+	rows = []map[string]interface{}{}
+	for key, value := range m {
+		row := map[string]interface{}{}
+		row["Key"] = strings.Title(key)
+		row["Value"] = value
+		rows = append(rows, row)
+	}
+	return
 }

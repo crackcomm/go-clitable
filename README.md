@@ -10,7 +10,7 @@ ASCII and Markdown tables in console for golang.
 
 ```Go
 table := New([]string{"Name", "Host", "..."})
-table.AddRow(map[string]interface{"Name": "..."})
+table.AddRow(map[string]interface{}{"Name": "..."})
 table.Print()
 ```
 
@@ -51,7 +51,7 @@ table.PrintHorizontal(map[string]interface{}{
 
 ```Go
 table := New([]string{"Name", "Host", "..."})
-table.AddRow(map[string]interface{"Name": "..."})
+table.AddRow(map[string]interface{}{"Name": "..."})
 table.Markdown = true
 table.Print()
 ```
