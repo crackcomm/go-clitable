@@ -29,13 +29,15 @@ package clitable
 
 import (
 	"fmt"
-	"github.com/mattn/go-runewidth"
 	"strings"
+
+	"github.com/mattn/go-runewidth"
 )
 
 // Table - Table structure.
 type Table struct {
 	Fields     []string
+	Footer     map[string]string
 	Rows       []map[string]string
 	HideHead   bool // when true doesn't print header
 	Markdown   bool
@@ -92,27 +94,28 @@ func (t *Table) AddRow(row map[string]interface{}) {
 			val = fmt.Sprintf("%v", v)
 		}
 
-		valLen := runewidth.StringWidth(val)
-		// align to field name length
-		if klen := runewidth.StringWidth(k); valLen < klen {
-			valLen = klen
-		}
-		valLen += 2 // + 2 spaces
-		if t.fieldSizes[k] < valLen {
-			t.fieldSizes[k] = valLen
-		}
 		newRow[k] = val
 	}
+
+	t.calculateSizes(newRow)
+
 	if len(newRow) > 0 {
 		t.Rows = append(t.Rows, newRow)
 	}
 }
 
+// AddFooter - Adds footer to the table.
+func (t *Table) AddFooter(footer map[string]string) {
+	t.Footer = footer
+}
+
 // Print - Prints table.
 func (t *Table) Print() {
-	if len(t.Rows) == 0 {
+	if len(t.Rows) == 0 && t.Footer == nil {
 		return
 	}
+
+	t.calculateSizes(t.Footer)
 
 	if !t.Markdown {
 		t.printDash()
@@ -120,17 +123,21 @@ func (t *Table) Print() {
 
 	if !t.HideHead {
 		fmt.Println(t.getHead())
-		if t.Markdown {
-			t.printMarkdownDash()
-		} else {
-			t.printDash()
-		}
+		t.printTableDash()
 	}
 
 	for _, r := range t.Rows {
 		fmt.Println(t.rowString(r))
 		if !t.Markdown {
 			t.printDash()
+		}
+	}
+
+	if t.Footer != nil {
+		t.printTableDash()
+		fmt.Println(t.rowString(t.Footer))
+		if !t.Markdown {
+			t.printTableDash()
 		}
 	}
 }
@@ -166,6 +173,15 @@ func (t *Table) fieldString(name, value string) string {
 	return value
 }
 
+// printTableDash - Prints table dash. Markdown or not depending on settings.
+func (t *Table) printTableDash() {
+	if t.Markdown {
+		t.printMarkdownDash()
+	} else {
+		t.printDash()
+	}
+}
+
 // printDash - Prints dash (on top and header).
 func (t *Table) printDash() {
 	s := "|"
@@ -191,6 +207,25 @@ func (t *Table) lineLength() (sum int) {
 		sum += l + 1
 	}
 	return sum + 1
+}
+
+func (t *Table) calculateSizes(row map[string]string) {
+	for _, k := range t.Fields {
+		v, ok := row[k]
+		if !ok {
+			continue
+		}
+
+		vlen := runewidth.StringWidth(v)
+		// align to field name length
+		if klen := runewidth.StringWidth(k); vlen < klen {
+			vlen = klen
+		}
+		vlen += 2 // + 2 spaces
+		if t.fieldSizes[k] < vlen {
+			t.fieldSizes[k] = vlen
+		}
+	}
 }
 
 func mapToRows(m map[string]interface{}) (rows []map[string]interface{}) {
