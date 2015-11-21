@@ -1,5 +1,7 @@
 # go-clitable
 
+### Deprecated in favor of [olekukonko/tablewriter](https://github.com/olekukonko/tablewriter)
+
 [![GoDoc](https://godoc.org/github.com/crackcomm/go-clitable?status.svg)](https://godoc.org/github.com/crackcomm/go-clitable)
 
 ASCII and Markdown tables in console for golang.
